@@ -54,12 +54,16 @@ jobs:
         with:
           path: release-artifacts
 
-      - name: Create tag for release
+      - name: Create unique tag for release
         id: tag
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           TAG_NAME="main-$(date +%Y%m%d%H%M%S)"
           git tag $TAG_NAME
-          git push origin $TAG_NAME
+          git push https://$PAT_TOKEN@github.com/${GITHUB_REPOSITORY}.git $TAG_NAME
           echo "tag=$TAG_NAME" >> $GITHUB_OUTPUT
 
       - name: Create GitHub prerelease
