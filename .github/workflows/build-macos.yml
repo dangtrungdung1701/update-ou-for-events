@@ -54,23 +54,11 @@ jobs:
         with:
           path: release-artifacts
 
-      - name: Create unique tag for release
-        id: tag
-        env:
-          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          TAG_NAME="main-$(date +%Y%m%d%H%M%S)"
-          git tag $TAG_NAME
-          git push https://$PAT_TOKEN@github.com/${GITHUB_REPOSITORY}.git $TAG_NAME
-          echo "tag=$TAG_NAME" >> $GITHUB_OUTPUT
-
       - name: Create GitHub prerelease
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ steps.tag.outputs.tag }}
+          tag_name: v1.0.0
           prerelease: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
