@@ -49,10 +49,19 @@ jobs:
         with:
           path: release-artifacts
 
-      - name: Create GitHub Release
+      - name: Create tag for release
+        id: tag
+        run: |
+          TAG_NAME="main-$(date +%Y%m%d%H%M%S)"
+          git tag $TAG_NAME
+          git push origin $TAG_NAME
+          echo "tag=$TAG_NAME" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub prerelease
+        id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: main
+          tag_name: ${{ steps.tag.outputs.tag }}
           prerelease: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
