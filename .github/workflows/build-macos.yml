@@ -1,15 +1,19 @@
-# .github/workflows/build-macos.yml
-name: Build macOS Binary
+# .github/workflows/build.yml
+name: Build Binaries
 
 on:
   push:
     tags:
-      - "v*" # only run on version tags like v1.0.0
+      - "v*" # run on version tags like v1.0.0
   workflow_dispatch:
 
 jobs:
-  build-macos:
-    runs-on: macos-latest
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        python: [3.13]
 
     steps:
       - uses: actions/checkout@v4
@@ -17,7 +21,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ matrix.python }}
 
       - name: Install dependencies
         run: |
@@ -27,10 +31,39 @@ jobs:
 
       - name: Build binary
         run: |
-          pyinstaller --onefile scripts/main.py -n dhis2-tool
+          if [ "${{ runner.os }}" == "Windows" ]; then
+            pyinstaller --onefile scripts/main.py -n dhis2-tool.exe
+          else
+            pyinstaller --onefile scripts/main.py -n dhis2-tool
+          fi
 
       - name: Upload binary
         uses: actions/upload-artifact@v4
         with:
-          name: dhis2-tool-macos
-          path: dist/dhis2-tool
+          name: dhis2-tool-${{ runner.os }}
+          path: |
+            dist/dhis2-tool*
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-artifacts
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload binaries to release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: release-artifacts/
+          asset_name: dhis2-tool-${{ runner.os }}
+          asset_content_type: application/octet-stream
