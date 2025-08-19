@@ -31,11 +31,7 @@ jobs:
 
       - name: Build binary
         run: |
-          if [ "${{ runner.os }}" == "Windows" ]; then
-            pyinstaller --onefile scripts/main.py -n dhis2-tool.exe
-          else
-            pyinstaller --onefile scripts/main.py -n dhis2-tool
-          fi
+          pyinstaller --onefile scripts/main.py -n dhis2-tool
 
       - name: Upload binary
         uses: actions/upload-artifact@v4
