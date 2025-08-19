@@ -1,0 +1,18 @@
+[project]
+name = "update-ou-for-events"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = "<3.15,>=3.13"
+dependencies = [
+    "httpx",
+    "pandas",
+    "openpyxl",
+    "python-dotenv>=1.1.1",
+    "pyinstaller>=6.15.0",
+    "click>=8.2.1",
+]
+[tool.pdm.scripts]
+fetch = "uv run python -m scripts.fetch"
+map = "uv run python -m scripts.map"
+build = "uv run pyinstaller dhis2-tool.spec"

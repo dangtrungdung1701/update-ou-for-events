@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+.venv*/
+pip-wheel-metadata/
+
+# Build artifacts
+build/
+dist/
+*.spec
+
+# PyInstaller
+*.manifest
+*.spec
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Logs & cache
+*.log
+*.tmp
+*.bak
+*.swp
+*.DS_Store
+
+# IDEs
+.vscode/
+.idea/
+*.iml
+
+# Env files
+.env
+.env.*
+
+# Data files
+data/*.xlsx
+data/*.json
