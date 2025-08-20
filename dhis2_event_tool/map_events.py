@@ -9,7 +9,7 @@ COMMUNE_DE = "OU1Pzn9LCBf"
 
 
 def read_mapping(excel_path: str):
-    df = pd.read_excel(excel_path, sheet_name="mapping")
+    df = pd.read_excel(excel_path, sheet_name="mapping").fillna("")
     return df.to_dict("records")
 
 
@@ -17,10 +17,10 @@ def upsert_data_value(data_values: list[dict], data_element: str, value: str):
     """Update value if dataElement exists, otherwise append a new one."""
     for dv in data_values:
         if dv.get("dataElement") == data_element:
-            dv["value"] = value
+            dv["value"] = value or ""
             return
     # not found → append new
-    data_values.append({"dataElement": data_element, "value": value})
+    data_values.append({"dataElement": data_element, "value": value or ""})
 
 
 def map_events(excel_path: str):
