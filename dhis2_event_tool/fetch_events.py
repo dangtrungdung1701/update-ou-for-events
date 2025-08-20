@@ -17,7 +17,7 @@ def fetch_events(event_ids: list[str], base_url: str, auth: tuple, chunk_size: i
     for i in range(0, len(event_ids), chunk_size):
         chunk = event_ids[i:i+chunk_size]
         ids_param = ";".join(chunk)
-        url = f"/api/tracker/events?event={ids_param}&skipPaging=false"
+        url = f"/api/tracker/events?event={ids_param}&fields=*&skipPaging=false"
         resp = client.get(url)
         resp.raise_for_status()
         data = resp.json().get("instances", [])
