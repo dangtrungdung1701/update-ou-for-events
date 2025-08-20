@@ -25,7 +25,7 @@ def fetch_events(event_ids: list[str], base_url: str, auth: tuple, chunk_size: i
             (item for item in data if item["event"] in ids_param), None)
         if found:
             events.extend(data)
-        print(f"{i+1}/{len(event_ids)}")
+        print(f"{math.ceil((i+1)/chunk_size)}/{math.ceil(len(event_ids)/chunk_size)}")
     return events
 
 
